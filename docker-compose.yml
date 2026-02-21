@@ -3,15 +3,15 @@ services:
     image: dpage/pgadmin4
     container_name: pgAdmin
     environment:
-      - PGADMIN_DEFAULT_EMAIL="${PGADMIN_DEFAULT_EMAIL}"
-      - PGADMIN_DEFAULT_PASSWORD="${PGADMIN_DEFAULT_PASSWORD}"
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
     ports:
-      -"8085:80"
+      - "8085:80"
     networks:
       - app-network
   
   postgres:
-    image: postgres:15
+    image: postgres:13
     container_name: postgresdb
     restart: always
     environment: 
@@ -29,7 +29,7 @@ services:
     build: ./frontend
     container_name: frontVue
     environment:
-      - VUE_APP_API_URL=http://192.188.53.214:8081/api
+      - VUE_APP_API_URL=${VUE_APP_API_URL}
     ports:
       - "8080:80"
     networks:
@@ -50,9 +50,8 @@ services:
     networks:
       - app-network
     depends_on:
-      - postgresdb
+      - postgres
 
-network:
+networks:
   app-network:
     driver: bridge
-

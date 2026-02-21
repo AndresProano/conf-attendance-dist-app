@@ -1,13 +1,16 @@
-# Paso 1: Construcción (Build)
+# Stage 1: Build the application using Maven
 FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn clean install -DskipTests
 
-# Paso 2: Ejecución (Runtime)
-FROM openjdk:17-jdk-slim
+# Stage 2: Create the final, smaller image
+FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
+# Copy the JAR from the build stage
 COPY --from=build /app/target/*.jar app.jar
+# Expose the port the application runs on
 EXPOSE 8080
+# Command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
