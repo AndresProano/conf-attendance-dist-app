@@ -23,7 +23,6 @@ public class Charla {
     private int cuposTotales;
     private int cuposDisponibles;
 
-    // Relación con el Expositor (la crearemos después)
-    // @ManyToOne
-    // private Expositor expositor;
+    @ManyToOne
+    private Expositor expositor;
 }

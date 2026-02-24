@@ -1,35 +1,27 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { MapPin, Clock, Bell } from 'lucide-vue-next'
 
-const charlas = ref([
-  {
-    id: 1,
-    titulo: 'Arquitecturas Distribuidas',
-    descripcion: 'Una inmersión profunda en sistemas distribuidos modernos y su escalabilidad.',
-    lugar: 'Auditorio A',
-    fechaHora: '2026-03-10T09:00:00',
-    cuposDisponibles: 45
-  },
-  {
-    id: 2,
-    titulo: 'Vue.js en el Mundo Real',
-    descripcion: 'Patrones avanzados y mejores prácticas para aplicaciones a gran escala.',
-    lugar: 'Sala 204',
-    fechaHora: '2026-03-10T11:30:00',
-    cuposDisponibles: 12
-  },
-  {
-    id: 3,
-    titulo: 'Seguridad en Microservicios',
-    descripcion: 'Estrategias de autenticación y autorización para ecosistemas complejos.',
-    lugar: 'Auditorio B',
-    fechaHora: '2026-03-10T14:00:00',
-    cuposDisponibles: 0
+const charlas = ref([])
+const isLoading = ref(true)
+
+const fetchCharlas = async () => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_APP_API_URL || 'http://localhost:8081/api'}/charlas`)
+    if (response.ok) {
+      charlas.value = await response.json()
+    }
+  } catch (e) {
+    console.error("Error fetching charlas", e)
+  } finally {
+    isLoading.value = false
   }
-])
+}
+
+onMounted(fetchCharlas)
 
 const formatTime = (dateStr) => {
+  if (!dateStr) return ''
   return new Date(dateStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 }
 
@@ -42,6 +34,12 @@ const showInterest = (charla) => {
   <div class="agenda">
     <h2>Agenda de Charlas</h2>
     
+    <div v-if="isLoading" class="loading">Cargando agenda...</div>
+    
+    <div v-else-if="charlas.length === 0" class="empty-state">
+      No hay charlas programadas aún.
+    </div>
+
     <div v-for="charla in charlas" :key="charla.id" class="card charla-card">
       <div class="charla-header">
         <h3>{{ charla.titulo }}</h3>
@@ -63,6 +61,9 @@ const showInterest = (charla) => {
             <MapPin :size="16" />
             <span>{{ charla.lugar }}</span>
           </div>
+          <div v-if="charla.expositor" class="info-item speaker-name">
+            <strong>Expositor:</strong> {{ charla.expositor.nombre }}
+          </div>
         </div>
         
         <button @click="showInterest(charla)" class="btn btn-outline btn-sm">
@@ -75,6 +76,12 @@ const showInterest = (charla) => {
 </template>
 
 <style scoped>
+.loading, .empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-light);
+}
+
 .charla-header {
   display: flex;
   justify-content: space-between;
@@ -99,6 +106,12 @@ const showInterest = (charla) => {
   gap: 0.5rem;
   font-size: 0.85rem;
   color: var(--text-dark);
+}
+
+.speaker-name {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--primary-red);
 }
 
 .info {

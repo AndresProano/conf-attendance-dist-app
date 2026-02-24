@@ -1,32 +1,39 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Twitter, Linkedin, Github } from 'lucide-vue-next'
 
-const expositores = ref([
-  {
-    id: 1,
-    nombre: 'Dra. Elena Ruiz',
-    bio: 'Experta en sistemas distribuidos y computación en la nube con más de 15 años de experiencia.',
-    foto: 'https://i.pravatar.cc/150?u=elena',
-    redes: { twitter: '#', linkedin: '#', github: '#' }
-  },
-  {
-    id: 2,
-    nombre: 'Marco Polo',
-    bio: 'Ingeniero de Software Senior especializado en frameworks frontend modernos y UX.',
-    foto: 'https://i.pravatar.cc/150?u=marco',
-    redes: { twitter: '#', linkedin: '#', github: '#' }
+const expositores = ref([])
+const isLoading = ref(true)
+
+const fetchExpositores = async () => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_APP_API_URL || 'http://localhost:8081/api'}/expositores`)
+    if (response.ok) {
+      expositores.value = await response.json()
+    }
+  } catch (e) {
+    console.error("Error fetching expositores", e)
+  } finally {
+    isLoading.value = false
   }
-])
+}
+
+onMounted(fetchExpositores)
 </script>
 
 <template>
   <div class="expositores">
     <h2>Nuestros Expositores</h2>
     
+    <div v-if="isLoading" class="loading">Cargando expositores...</div>
+    
+    <div v-else-if="expositores.length === 0" class="empty-state">
+      No hay expositores registrados aún.
+    </div>
+
     <div v-for="expositor in expositores" :key="expositor.id" class="card expositor-card">
       <div class="profile-main">
-        <img :src="expositor.foto" :alt="expositor.nombre" class="avatar" />
+        <img :src="expositor.fotoUrl || 'https://i.pravatar.cc/150?u=default'" :alt="expositor.nombre" class="avatar" />
         <div class="profile-info">
           <h3>{{ expositor.nombre }}</h3>
           <p class="bio">{{ expositor.bio }}</p>
@@ -34,13 +41,13 @@ const expositores = ref([
       </div>
       
       <div class="social-links">
-        <a :href="expositor.redes.twitter" target="_blank" class="social-icon">
+        <a v-if="expositor.twitter" :href="expositor.twitter" target="_blank" class="social-icon">
           <Twitter :size="20" />
         </a>
-        <a :href="expositor.redes.linkedin" target="_blank" class="social-icon">
+        <a v-if="expositor.linkedin" :href="expositor.linkedin" target="_blank" class="social-icon">
           <Linkedin :size="20" />
         </a>
-        <a :href="expositor.redes.github" target="_blank" class="social-icon">
+        <a v-if="expositor.github" :href="expositor.github" target="_blank" class="social-icon">
           <Github :size="20" />
         </a>
       </div>
@@ -49,6 +56,12 @@ const expositores = ref([
 </template>
 
 <style scoped>
+.loading, .empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-light);
+}
+
 .profile-main {
   display: flex;
   gap: 1.5rem;
