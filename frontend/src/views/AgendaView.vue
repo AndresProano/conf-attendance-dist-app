@@ -7,7 +7,7 @@ const isLoading = ref(true)
 
 const fetchCharlas = async () => {
   try {
-    const response = await fetch(`${import.meta.env.VITE_APP_API_URL || 'http://localhost:8081/api'}/charlas`)
+    const response = await fetch(`${import.meta.env.VITE_APP_API_URL || '/api'}/charlas`)
     if (response.ok) {
       charlas.value = await response.json()
     }

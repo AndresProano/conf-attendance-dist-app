@@ -18,7 +18,7 @@ onMounted(async () => {
 
 const fetchPerfil = async () => {
   try {
-    const response = await fetch(`${import.meta.env.VITE_APP_API_URL || 'http://localhost:8081/api'}/usuarios/${user.value.email}/perfil`)
+    const response = await fetch(`${import.meta.env.VITE_APP_API_URL || '/api'}/usuarios/${user.value.email}/perfil`)
     if (response.ok) {
       perfil.value = await response.json()
     }

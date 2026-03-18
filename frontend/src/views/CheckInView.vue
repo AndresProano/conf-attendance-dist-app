@@ -48,7 +48,7 @@ async function onScanSuccess(decodedText) {
   
   isLoading.value = true
   try {
-    const response = await fetch(`${import.meta.env.VITE_APP_API_URL || 'http://localhost:8081/api'}/check-in`, {
+    const response = await fetch(`${import.meta.env.VITE_APP_API_URL || '/api'}/check-in`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

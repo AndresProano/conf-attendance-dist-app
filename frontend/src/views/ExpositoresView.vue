@@ -6,7 +6,7 @@ const isLoading = ref(true)
 
 const fetchExpositores = async () => {
   try {
-    const response = await fetch(`${import.meta.env.VITE_APP_API_URL || 'http://localhost:8081/api'}/expositores`)
+    const response = await fetch(`${import.meta.env.VITE_APP_API_URL || '/api'}/expositores`)
     if (response.ok) {
       expositores.value = await response.json()
     }
