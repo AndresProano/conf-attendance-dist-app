@@ -54,7 +54,8 @@ async function onScanSuccess(decodedText) {
       body: JSON.stringify({
         charlaId: decodedText,
         email: user.value.email,
-        nombre: user.value.nombre
+        nombre: user.value.nombre,
+        banner: user.value.banner || ''
       })
     })
     

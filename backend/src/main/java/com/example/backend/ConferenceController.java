@@ -1,9 +1,19 @@
 package com.example.backend;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/api")
@@ -112,6 +124,66 @@ public class ConferenceController {
         charlaRepository.save(charla);
 
         return ResponseEntity.ok("Check-in exitoso para: " + charla.getTitulo());
+    }
+
+    @GetMapping(value = "/charlas/{id}/qr", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getCharlaQr(@PathVariable Long id,
+                                               @RequestParam(defaultValue = "300") int size) {
+        Optional<Charla> charlaOpt = charlaRepository.findById(id);
+        if (charlaOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            QRCodeWriter writer = new QRCodeWriter();
+            BitMatrix bitMatrix = writer.encode(String.valueOf(id), BarcodeFormat.QR_CODE, size, size);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            MatrixToImageWriter.writeToStream(bitMatrix, "PNG", out);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_PNG)
+                    .body(out.toByteArray());
+        } catch (WriterException | IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping(value = "/charlas/qr-all", produces = "application/zip")
+    public ResponseEntity<byte[]> getAllQrCodes(@RequestParam(defaultValue = "400") int size) {
+        List<Charla> charlas = charlaRepository.findAll();
+        if (charlas.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            ByteArrayOutputStream zipOut = new ByteArrayOutputStream();
+            ZipOutputStream zos = new ZipOutputStream(zipOut);
+            QRCodeWriter writer = new QRCodeWriter();
+
+            for (Charla charla : charlas) {
+                BitMatrix bitMatrix = writer.encode(
+                        String.valueOf(charla.getId()), BarcodeFormat.QR_CODE, size, size);
+                ByteArrayOutputStream pngOut = new ByteArrayOutputStream();
+                MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOut);
+
+                String fileName = sanitizeFileName(charla.getId() + "-" + charla.getTitulo()) + ".png";
+                zos.putNextEntry(new ZipEntry(fileName));
+                zos.write(pngOut.toByteArray());
+                zos.closeEntry();
+            }
+
+            zos.close();
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=\"qr-codes-charlas.zip\"")
+                    .body(zipOut.toByteArray());
+        } catch (WriterException | IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    private String sanitizeFileName(String name) {
+        String normalized = Normalizer.normalize(name, Normalizer.Form.NFD)
+                .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return normalized.replaceAll("[^a-zA-Z0-9\\-]", "_").replaceAll("_+", "_");
     }
 
     @GetMapping("/usuarios/{email}/perfil")

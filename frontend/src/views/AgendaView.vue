@@ -56,6 +56,8 @@ const isEventStarted = (charla) => {
 const showInterest = (charla) => {
   alert(`Te has interesado en: ${charla.titulo}. Recibirás notificaciones.`)
 }
+
+
 </script>
 
 <template>
