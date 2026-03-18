@@ -20,6 +20,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -73,9 +74,15 @@ public class ConferenceController {
         charla.setCuposTotales(cuposTotales);
         charla.setCuposDisponibles(cuposTotales);
 
-        if (payload.containsKey("expositorId")) {
+        if (payload.containsKey("expositorIds") && payload.get("expositorIds") instanceof List<?> rawIds) {
+            List<Long> ids = new ArrayList<>();
+            for (Object rawId : rawIds) {
+                ids.add(Long.valueOf(rawId.toString()));
+            }
+            charla.getExpositores().addAll(expositorRepository.findAllById(ids));
+        } else if (payload.containsKey("expositorId")) {
             Long expId = Long.valueOf(payload.get("expositorId").toString());
-            expositorRepository.findById(expId).ifPresent(charla::setExpositor);
+            expositorRepository.findById(expId).ifPresent(exp -> charla.getExpositores().add(exp));
         }
 
         return ResponseEntity.ok(charlaRepository.save(charla));

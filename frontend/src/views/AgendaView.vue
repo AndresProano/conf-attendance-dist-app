@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { MapPin, Clock, Bell } from 'lucide-vue-next'
+import { MapPin, Clock } from 'lucide-vue-next'
 
 const charlas = ref([])
 const isLoading = ref(true)
@@ -53,8 +53,14 @@ const isEventStarted = (charla) => {
   return new Date() >= startDateTime
 }
 
-const showInterest = (charla) => {
-  alert(`Te has interesado en: ${charla.titulo}. Recibirás notificaciones.`)
+const speakerNames = (charla) => {
+  if (Array.isArray(charla?.expositores) && charla.expositores.length > 0) {
+    return charla.expositores.map((exp) => exp.nombre).join(', ')
+  }
+  if (charla?.expositor?.nombre) {
+    return charla.expositor.nombre
+  }
+  return ''
 }
 
 
@@ -78,10 +84,6 @@ const showInterest = (charla) => {
     >
       <div class="charla-header">
         <h3>{{ charla.titulo }}</h3>
-        <span v-if="charla.cuposDisponibles > 0" class="badge">
-          {{ charla.cuposDisponibles }} cupos
-        </span>
-        <span v-else class="badge-empty">Agotado</span>
       </div>
       
       <div class="charla-footer">
@@ -94,19 +96,10 @@ const showInterest = (charla) => {
             <MapPin :size="16" />
             <span>{{ charla.lugar }}</span>
           </div>
-          <div v-if="charla.expositor" class="info-item speaker-name">
-            <strong>Expositor:</strong> {{ charla.expositor.nombre }}
+          <div v-if="speakerNames(charla)" class="info-item speaker-name">
+            <strong>Expositor(es):</strong> {{ speakerNames(charla) }}
           </div>
         </div>
-        
-        <button
-          @click="showInterest(charla)"
-          class="btn btn-outline btn-sm"
-          :disabled="isEventStarted(charla)"
-        >
-          <Bell :size="16" />
-          Me interesa
-        </button>
       </div>
     </div>
   </div>
@@ -127,9 +120,7 @@ const showInterest = (charla) => {
 
 
 .charla-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  display: block;
 }
 
 .info-item {
@@ -152,28 +143,8 @@ const showInterest = (charla) => {
   gap: 0.25rem;
 }
 
-.badge-empty {
-  background: #eee;
-  color: #888;
-  padding: 0.2rem 0.5rem;
-  border-radius: 12px;
-  font-size: 0.7rem;
-}
-
-.btn-sm {
-  padding: 0.3rem 0.6rem;
-  font-size: 0.8rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
 
 .event-started {
   opacity: 0.55;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 </style>

@@ -14,8 +14,4 @@ public class Expositor {
     private String nombre;
     @Column(length = 1000)
     private String bio;
-    private String fotoUrl;
-    private String twitter;
-    private String linkedin;
-    private String github;
 }

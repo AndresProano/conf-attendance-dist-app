@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -23,6 +25,11 @@ public class Charla {
     private int cuposTotales;
     private int cuposDisponibles;
 
-    @ManyToOne
-    private Expositor expositor;
+    @ManyToMany
+    @JoinTable(
+            name = "charla_expositores",
+            joinColumns = @JoinColumn(name = "charla_id"),
+            inverseJoinColumns = @JoinColumn(name = "expositor_id")
+    )
+    private List<Expositor> expositores = new ArrayList<>();
 }
