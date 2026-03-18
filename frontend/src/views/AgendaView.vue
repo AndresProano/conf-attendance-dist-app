@@ -20,9 +20,37 @@ const fetchCharlas = async () => {
 
 onMounted(fetchCharlas)
 
-const formatTime = (dateStr) => {
-  if (!dateStr) return ''
-  return new Date(dateStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+const formatDate = (fechaStr) => {
+  if (!fechaStr) return ''
+  const date = new Date(`${fechaStr}T00:00:00`)
+  return date.toLocaleDateString('es-EC', { day: 'numeric', month: 'long' })
+}
+
+const formatHour = (timeStr) => {
+  if (!timeStr) return ''
+  const [rawHour, rawMinute = '00'] = timeStr.split(':')
+  const hour = Number(rawHour)
+  const minute = Number(rawMinute)
+  if (Number.isNaN(hour) || Number.isNaN(minute)) return timeStr
+  return minute === 0 ? `${hour}` : `${hour}:${String(minute).padStart(2, '0')}`
+}
+
+const formatRange = (charla) => {
+  if (!charla?.horaDesde || !charla?.horaHasta) return ''
+  return `${formatHour(charla.horaDesde)} a ${formatHour(charla.horaHasta)}`
+}
+
+const getStartDateTime = (charla) => {
+  if (charla?.fecha && charla?.horaDesde) {
+    return new Date(`${charla.fecha}T${charla.horaDesde}`)
+  }
+  return null
+}
+
+const isEventStarted = (charla) => {
+  const startDateTime = getStartDateTime(charla)
+  if (!startDateTime) return false
+  return new Date() >= startDateTime
 }
 
 const showInterest = (charla) => {
@@ -40,7 +68,12 @@ const showInterest = (charla) => {
       No hay charlas programadas aún.
     </div>
 
-    <div v-for="charla in charlas" :key="charla.id" class="card charla-card">
+    <div
+      v-for="charla in charlas"
+      :key="charla.id"
+      class="card charla-card"
+      :class="{ 'event-started': isEventStarted(charla) }"
+    >
       <div class="charla-header">
         <h3>{{ charla.titulo }}</h3>
         <span v-if="charla.cuposDisponibles > 0" class="badge">
@@ -49,13 +82,11 @@ const showInterest = (charla) => {
         <span v-else class="badge-empty">Agotado</span>
       </div>
       
-      <p class="description">{{ charla.descripcion }}</p>
-      
       <div class="charla-footer">
         <div class="info">
           <div class="info-item">
             <Clock :size="16" />
-            <span>{{ formatTime(charla.fechaHora) }}</span>
+            <span>{{ formatDate(charla.fecha) }} - {{ formatRange(charla) }}</span>
           </div>
           <div class="info-item">
             <MapPin :size="16" />
@@ -66,7 +97,11 @@ const showInterest = (charla) => {
           </div>
         </div>
         
-        <button @click="showInterest(charla)" class="btn btn-outline btn-sm">
+        <button
+          @click="showInterest(charla)"
+          class="btn btn-outline btn-sm"
+          :disabled="isEventStarted(charla)"
+        >
           <Bell :size="16" />
           Me interesa
         </button>
@@ -88,11 +123,6 @@ const showInterest = (charla) => {
   align-items: flex-start;
 }
 
-.description {
-  font-size: 0.9rem;
-  color: var(--text-light);
-  margin-bottom: 1rem;
-}
 
 .charla-footer {
   display: flex;
@@ -134,5 +164,14 @@ const showInterest = (charla) => {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+}
+
+.event-started {
+  opacity: 0.55;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>

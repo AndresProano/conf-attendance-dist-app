@@ -2,7 +2,8 @@ package com.example.backend;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -38,9 +39,10 @@ public class DataInitializer implements CommandLineRunner {
 
             Charla c1 = new Charla();
             c1.setTitulo("Arquitecturas Distribuidas");
-            c1.setDescripcion("Una inmersión profunda en sistemas distribuidos modernos y su escalabilidad.");
             c1.setLugar("Auditorio A");
-            c1.setFechaHora(LocalDateTime.of(2026, 3, 10, 9, 0));
+            c1.setFecha(LocalDate.of(2026, 3, 10));
+            c1.setHoraDesde(LocalTime.of(9, 0));
+            c1.setHoraHasta(LocalTime.of(10, 0));
             c1.setCuposTotales(50);
             c1.setCuposDisponibles(50);
             c1.setExpositor(e1);
@@ -48,9 +50,10 @@ public class DataInitializer implements CommandLineRunner {
 
             Charla c2 = new Charla();
             c2.setTitulo("Vue.js en el Mundo Real");
-            c2.setDescripcion("Patrones avanzados y mejores prácticas para aplicaciones a gran escala.");
             c2.setLugar("Sala 204");
-            c2.setFechaHora(LocalDateTime.of(2026, 3, 10, 11, 30));
+            c2.setFecha(LocalDate.of(2026, 3, 10));
+            c2.setHoraDesde(LocalTime.of(11, 30));
+            c2.setHoraHasta(LocalTime.of(12, 30));
             c2.setCuposTotales(30);
             c2.setCuposDisponibles(30);
             c2.setExpositor(e2);

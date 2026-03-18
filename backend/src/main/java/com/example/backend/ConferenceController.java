@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,11 +41,25 @@ public class ConferenceController {
     public ResponseEntity<?> createCharla(@RequestBody Map<String, Object> payload) {
         Charla charla = new Charla();
         charla.setTitulo(payload.get("titulo").toString());
-        charla.setDescripcion(payload.get("descripcion").toString());
         charla.setLugar(payload.get("lugar").toString());
-        charla.setFechaHora(LocalDateTime.parse(payload.get("fechaHora").toString()));
-        charla.setCuposTotales((Integer) payload.get("cuposTotales"));
-        charla.setCuposDisponibles((Integer) payload.get("cuposTotales"));
+
+        // Supports new payload (fecha + horaDesde + horaHasta) and old payload (fechaHora).
+        if (payload.containsKey("fecha") && payload.containsKey("horaDesde") && payload.containsKey("horaHasta")) {
+            charla.setFecha(LocalDate.parse(payload.get("fecha").toString()));
+            charla.setHoraDesde(LocalTime.parse(payload.get("horaDesde").toString()));
+            charla.setHoraHasta(LocalTime.parse(payload.get("horaHasta").toString()));
+        } else if (payload.containsKey("fechaHora")) {
+            LocalDateTime inicio = LocalDateTime.parse(payload.get("fechaHora").toString());
+            charla.setFecha(inicio.toLocalDate());
+            charla.setHoraDesde(inicio.toLocalTime());
+            charla.setHoraHasta(inicio.toLocalTime().plusHours(1));
+        } else {
+            return ResponseEntity.badRequest().body("Se requiere fecha y rango horario");
+        }
+
+        int cuposTotales = ((Number) payload.get("cuposTotales")).intValue();
+        charla.setCuposTotales(cuposTotales);
+        charla.setCuposDisponibles(cuposTotales);
 
         if (payload.containsKey("expositorId")) {
             Long expId = Long.valueOf(payload.get("expositorId").toString());

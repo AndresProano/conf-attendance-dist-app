@@ -2,7 +2,8 @@ package com.example.backend;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 
 @Entity
@@ -14,12 +15,11 @@ public class Charla {
     private Long id;
 
     private String titulo;
-    
-    @Column(length = 1000)
-    private String descripcion;
-    
+
     private String lugar;
-    private LocalDateTime fechaHora;
+    private LocalDate fecha;
+    private LocalTime horaDesde;
+    private LocalTime horaHasta;
     private int cuposTotales;
     private int cuposDisponibles;
 
