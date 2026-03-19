@@ -26,11 +26,10 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Force a clean reseed so the updated agenda/speakers always replace old records.
-        asistenciaRepository.deleteAll();
-        charlaRepository.deleteAll();
-        expositorRepository.deleteAll();
-        usuarioRepository.deleteAll();
+        if (charlaRepository.count() > 0) {
+            System.out.println("Base de datos ya contiene datos, omitiendo inicializacion.");
+            return;
+        }
 
         LocalDate fechaMar19 = LocalDate.of(2026, 3, 19);
         LocalDate fechaMar20 = LocalDate.of(2026, 3, 20);
