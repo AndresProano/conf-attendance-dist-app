@@ -115,20 +115,12 @@ public class ConferenceController {
             return ResponseEntity.ok("Ya estás registrado en esta charla");
         }
 
-        // 4. Verificar cupos
-        if (charla.getCuposDisponibles() <= 0) {
-            return ResponseEntity.badRequest().body("No hay cupos disponibles");
-        }
-
-        // 5. Registrar asistencia y actualizar cupos
+        // 4. Registrar asistencia
         Asistencia asistencia = new Asistencia();
         asistencia.setUsuario(usuario);
         asistencia.setCharla(charla);
         asistencia.setFechaRegistro(LocalDateTime.now());
         asistenciaRepository.save(asistencia);
-
-        charla.setCuposDisponibles(charla.getCuposDisponibles() - 1);
-        charlaRepository.save(charla);
 
         return ResponseEntity.ok("Check-in exitoso para: " + charla.getTitulo());
     }
