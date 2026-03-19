@@ -73,8 +73,11 @@ public class DataInitializer implements CommandLineRunner {
         Expositor jorgeLuisJaramillo = createExpositor("Jorge Luis Jaramillo",
                 "Gerente General");
 
-        Expositor marcelaMoreta = createExpositor("Marcela Moreta",
-                "Vicepresidente Ejecutivo y Directora Comercial");
+        Expositor galoAlmendariz = createExpositor("Galo Almendariz",
+                "Presidente Corporativo Grupo Megafrio S.A.");
+
+        Expositor estebanProano = createExpositor("Esteban Proano",
+                "CEO of SEDEMI");
 
         Expositor marcelaReinoso = createExpositor("Marcela Reinoso",
                 "Consultora Independiente");
@@ -139,7 +142,7 @@ public class DataInitializer implements CommandLineRunner {
         createCharla("Emprendimiento en el Sector de HVAC",
                 "Teatro Calderon de la Barca, USFQ Campus",
                 fechaMar19, LocalTime.of(11, 45), LocalTime.of(12, 45),
-                220, marcelaMoreta);
+                220, galoAlmendariz);
 
         // Charlas (19 de marzo - afternoon/evening)
         createCharla("Receso para Almuerzo",
@@ -208,7 +211,7 @@ public class DataInitializer implements CommandLineRunner {
         createCharla("Emprendimiento en el Sector de Infraestructura",
                 "Teatro Calderon de la Barca, USFQ Campus",
                 fechaMar20, LocalTime.of(10, 0), LocalTime.of(11, 0),
-                220, jorgeLuisCepeda);
+                220, estebanProano);
 
         createCharla("ASME Oral Competition, patrocinado por ASME Old Guard Committee",
                 "Teatro Epicuro",

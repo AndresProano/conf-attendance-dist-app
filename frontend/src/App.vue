@@ -6,7 +6,15 @@ import { Calendar, Users, QrCode, Bookmark } from 'lucide-vue-next'
 <template>
   <div class="app-container">
     <header class="header">
-      <h1>Conf Attendance</h1>
+      <div class="header-content">
+        <div class="header-brand">
+          <span class="header-logo">ASME</span>
+          <div class="header-text">
+            <h1>EFx Conference</h1>
+            <p class="header-subtitle">USFQ - Marzo 19-20, 2026</p>
+          </div>
+        </div>
+      </div>
     </header>
 
     <main class="container">
@@ -15,20 +23,20 @@ import { Calendar, Users, QrCode, Bookmark } from 'lucide-vue-next'
 
     <nav class="bottom-nav">
       <RouterLink to="/" class="nav-item">
-        <Calendar :size="24" />
+        <Calendar :size="22" />
         <span>Agenda</span>
       </RouterLink>
       <RouterLink to="/expositores" class="nav-item">
-        <Users :size="24" />
+        <Users :size="22" />
         <span>Expositores</span>
       </RouterLink>
       <RouterLink to="/checkin" class="nav-item">
-        <QrCode :size="24" />
+        <QrCode :size="22" />
         <span>Check-In</span>
       </RouterLink>
       <RouterLink to="/reservas" class="nav-item">
-        <Bookmark :size="24" />
-        <span>Reservas</span>
+        <Bookmark :size="22" />
+        <span>Mi Perfil</span>
       </RouterLink>
     </nav>
   </div>
@@ -36,18 +44,47 @@ import { Calendar, Users, QrCode, Bookmark } from 'lucide-vue-next'
 
 <style scoped>
 .header {
-  background-color: var(--white);
-  padding: 1rem;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  background: linear-gradient(135deg, #c62828 0%, #8e0000 100%);
+  padding: 1rem 1.25rem;
   position: sticky;
   top: 0;
   z-index: 100;
+  color: white;
+}
+
+.header-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-logo {
+  background: white;
+  color: #c62828;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  letter-spacing: 1px;
 }
 
 .header h1 {
-  margin-bottom: 0;
-  font-size: 1.5rem;
+  color: white;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.header-subtitle {
+  color: rgba(255,255,255,0.8);
+  font-size: 0.8rem;
+  margin: 0;
 }
 
 .app-container {
