@@ -33,8 +33,8 @@ const timeSlots = computed(() => {
   const dayCharlas = charlas.value.filter(c => c.fecha === activeDay.value)
   const slotMap = {}
   dayCharlas.forEach(c => {
-    const key = `${c.horaDesde}-${c.horaHasta}`
-    if (!slotMap[key]) slotMap[key] = { horaDesde: c.horaDesde, horaHasta: c.horaHasta, charlas: [] }
+    const key = c.horaDesde
+    if (!slotMap[key]) slotMap[key] = { horaDesde: c.horaDesde, charlas: [] }
     slotMap[key].charlas.push(c)
   })
   return Object.values(slotMap).sort((a, b) => a.horaDesde.localeCompare(b.horaDesde))
@@ -76,8 +76,9 @@ const isEventStarted = (charla) => {
 
 const getCardClass = (charla) => {
   if (isBreak(charla)) return 'charla-break'
+  const t = charla.titulo?.toLowerCase() || ''
   const lugar = charla.lugar?.toLowerCase() || ''
-  if (lugar.includes('epicuro') || lugar.includes('plaza')) return 'charla-competition'
+  if (t.includes('iam3d') || t.includes('elevator pitch') || t.includes('oral competition') || lugar.includes('epicuro') || lugar.includes('plaza')) return 'charla-competition'
   return 'charla-talk'
 }
 </script>
@@ -117,7 +118,6 @@ const getCardClass = (charla) => {
         <div v-for="slot in timeSlots" :key="`${slot.horaDesde}-${slot.horaHasta}`" class="time-slot">
           <div class="time-label">
             <span class="time-from">{{ formatHour(slot.horaDesde) }}</span>
-            <span class="time-to">{{ formatHour(slot.horaHasta) }}</span>
           </div>
           <div class="slot-cards" :class="{ 'multi': slot.charlas.length > 1 }">
             <div
@@ -132,11 +132,16 @@ const getCardClass = (charla) => {
                   <UtensilsCrossed v-else-if="charla.titulo.toLowerCase().includes('almuerzo')" :size="18" />
                   <User v-else :size="18" />
                   <span>{{ charla.titulo }}</span>
+                  <span class="break-time">{{ formatHour(charla.horaDesde) }} - {{ formatHour(charla.horaHasta) }}</span>
                 </div>
               </template>
               <template v-else>
                 <h3 class="charla-title">{{ charla.titulo }}</h3>
                 <div class="charla-meta">
+                  <div class="meta-item">
+                    <Clock :size="14" />
+                    <span>{{ formatHour(charla.horaDesde) }} - {{ formatHour(charla.horaHasta) }}</span>
+                  </div>
                   <div class="meta-item">
                     <MapPin :size="14" />
                     <span>{{ charla.lugar }}</span>
@@ -384,6 +389,12 @@ const getCardClass = (charla) => {
   color: var(--text-light);
   font-size: 0.85rem;
   font-weight: 500;
+}
+
+.break-time {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--gray-600);
 }
 
 @media (max-width: 500px) {

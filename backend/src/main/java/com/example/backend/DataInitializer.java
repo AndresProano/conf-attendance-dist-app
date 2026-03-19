@@ -120,7 +120,7 @@ public class DataInitializer implements CommandLineRunner {
                 220, henryYandun);
 
         createCharla("ASME Innovative Additive Manufacturing 3D (IAM3D) Challenge",
-                "Teatro Epicuro",
+                "Plaza del Nino, USFQ Campus",
                 fechaMar19, LocalTime.of(10, 0), LocalTime.of(11, 0),
                 120, null);
 
@@ -135,7 +135,7 @@ public class DataInitializer implements CommandLineRunner {
                 500, null);
 
         createCharla("ASME Innovative Additive Manufacturing 3D (IAM3D) Challenge",
-                "Teatro Epicuro",
+                "Plaza del Nino, USFQ Campus",
                 fechaMar19, LocalTime.of(11, 45), LocalTime.of(12, 45),
                 120, null);
 
@@ -150,20 +150,25 @@ public class DataInitializer implements CommandLineRunner {
                 fechaMar19, LocalTime.of(12, 45), LocalTime.of(14, 30),
                 500, null);
 
-        createCharla("ASME Innovative Additive Manufacturing 3D (IAM3D) Challenge",
-                "Teatro Epicuro",
-                fechaMar19, LocalTime.of(14, 30), LocalTime.of(16, 30),
-                120, null);
-
         createCharla("Emprendimiento en el Sector del Vidrio y el Aluminio",
                 "Teatro Calderon de la Barca, USFQ Campus",
                 fechaMar19, LocalTime.of(14, 30), LocalTime.of(15, 30),
                 220, jorgeLuisJaramillo);
 
+        createCharla("ASME Innovative Additive Manufacturing 3D (IAM3D) Challenge",
+                "Plaza del Nino, USFQ Campus",
+                fechaMar19, LocalTime.of(14, 30), LocalTime.of(15, 30),
+                120, null);
+
         createCharla("Emprendimiento Joven en la Industria Petrolera",
                 "Teatro Calderon de la Barca, USFQ Campus",
                 fechaMar19, LocalTime.of(15, 30), LocalTime.of(16, 30),
                 220, juanCarlosSantamaria);
+
+        createCharla("ASME Innovative Additive Manufacturing 3D (IAM3D) Challenge",
+                "Plaza del Nino, USFQ Campus",
+                fechaMar19, LocalTime.of(15, 30), LocalTime.of(16, 30),
+                120, null);
 
         createCharla("Intermedio & Refrigerio",
                 "USFQ Campus",
@@ -178,12 +183,12 @@ public class DataInitializer implements CommandLineRunner {
                 dianaRojas, eduardoRosero, rafaelSoria);
 
         createCharla("ASME Innovative Additive Manufacturing 3D (IAM3D) Challenge",
-                "Teatro Epicuro",
+                "Plaza del Nino, USFQ Campus",
                 fechaMar19, LocalTime.of(17, 0), LocalTime.of(18, 0),
                 120, null);
 
         createCharla("ASME Innovative Additive Manufacturing 3D (IAM3D) Challenge - Deliberacion de los jueces",
-                "Teatro Epicuro",
+                "Plaza del Nino, USFQ Campus",
                 fechaMar19, LocalTime.of(18, 0), LocalTime.of(18, 30),
                 120, null);
 
@@ -198,7 +203,7 @@ public class DataInitializer implements CommandLineRunner {
                 fechaMar20, LocalTime.of(8, 0), LocalTime.of(8, 30),
                 200, null);
 
-        createCharla("Emprender con Proposito: Disciplina, Humildad y el Sueno Llamado SERTECPET",
+        createCharla("Emprendimiento en el Sector Hidrocarburifero y Energetico",
                 "Teatro Calderon de la Barca, USFQ Campus",
                 fechaMar20, LocalTime.of(9, 0), LocalTime.of(10, 0),
                 220, pauloLopez);
@@ -246,7 +251,7 @@ public class DataInitializer implements CommandLineRunner {
 
         createCharla("ASME Oral Competition, patrocinado por ASME Old Guard Committee",
                 "Teatro Epicuro",
-                fechaMar20, LocalTime.of(14, 30), LocalTime.of(18, 0),
+                fechaMar20, LocalTime.of(14, 30), LocalTime.of(15, 30),
                 120, null);
 
         createCharla("FORO: Ask Me Anything: Una Platica con la Alta Gerencia",
@@ -256,9 +261,19 @@ public class DataInitializer implements CommandLineRunner {
                 danielAvila, santiagoCampana, enithCarrion,
                 oswaldoCortez, patricioCrespo, pamelaUbidia);
 
+        createCharla("ASME Oral Competition, patrocinado por ASME Old Guard Committee",
+                "Teatro Epicuro",
+                fechaMar20, LocalTime.of(15, 30), LocalTime.of(17, 0),
+                120, null);
+
+        createCharla("ASME Oral Competition, patrocinado por ASME Old Guard Committee",
+                "Teatro Epicuro",
+                fechaMar20, LocalTime.of(17, 0), LocalTime.of(18, 0),
+                120, null);
+
         createCharla("Ceremonia de Clausura y Entrega de Premios",
-                "Salon Azul",
-                fechaMar20, LocalTime.of(17, 0), LocalTime.of(17, 45),
+                "Teatro Calderon de la Barca, USFQ Campus",
+                fechaMar20, LocalTime.of(18, 0), LocalTime.of(18, 45),
                 300, null);
 
         System.out.println("Base de datos inicializada con datos de la conferencia (30 charlas, 21 expositores).");
